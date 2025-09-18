@@ -1,0 +1,2 @@
+﻿feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date,feed_version
+"CITYWAY","http://cityway.fr",FR,20231009,20251231,"11518"

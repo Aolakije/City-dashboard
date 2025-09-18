@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Dashboard</title>
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-city"></i>
+                <span>Rouen City Dashboard</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    City Dashboard
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-home"></i>
+                    Home
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Issue Reporting
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-clock"></i>
+                    Real-time Service Status
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-leaf"></i>
+                    Air & Water Quality
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    Crime Alerts
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Natural Disaster Alert
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    Help
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </div>
+            </nav>
+            
+            <div class="logout">
+                <i class="fas fa-sign-out-alt"></i>
+                Log Out
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Air & Water Quality</h1>
+            </div>
+
+            <div class="content-grid">
+                <!-- Weather Dashboard -->
+                <div class="weather-section">
+                    <div class="weather-cards">
+                        <div class="weather-card">
+                            <div class="card-header">UV Index</div>
+                            <div class="uv-gauge">
+                                <div class="gauge">
+                                    <div class="gauge-fill"></div>
+                                    <div class="gauge-value">6</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="weather-card">
+                            <div class="card-header">Water</div>
+                            <div class="weather-icon">
+                                <i class="fas fa-water"></i>
+                            </div>
+                        </div>
+
+                        <div class="weather-card">
+                            <div class="card-header">Humidity</div>
+                            <div class="weather-icon">
+                                <i class="fas fa-cloud-rain"></i>
+                            </div>
+                        </div>
+
+                        <div class="weather-card aqi-card">
+                            <div class="card-header">AQI</div>
+                            <div class="aqi-value">42</div>
+                        </div>
+                    </div>
+
+                    <div class="temperature-status">
+                        <h3>Temperature Status</h3>
+                        <div class="temp-info">
+                            <i class="fas fa-thermometer-half"></i>
+                            <span class="current-temp">15°C</span>
+                        </div>
+                        <div class="temp-details">
+                            <span class="feels-like">Feels like: --°C</span>
+                            <span class="temp-range">Range: --°C to --°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Forecast -->
+                    <div class="forecast">
+                        <div class="forecast-day">
+                            <span class="day">Today</span>
+                            <i class="fas fa-cloud-rain"></i>
+                            <span class="temp">10°</span>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="day">Thu</span>
+                            <i class="fas fa-cloud-sun"></i>
+                            <span class="temp">15°</span>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="day">Fri</span>
+                            <i class="fas fa-sun"></i>
+                            <span class="temp">17°</span>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="day">Sat</span>
+                            <i class="fas fa-cloud-rain"></i>
+                            <span class="temp">13°</span>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="day">Sun</span>
+                            <i class="fas fa-cloud-sun"></i>
+                            <span class="temp">19°</span>
+                        </div>
+                        <div class="forecast-day">
+                            <span class="day">Mon</span>
+                            <i class="fas fa-cloud"></i>
+                            <span class="temp">14°</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather Controls -->
+                <div class="weather-controls">
+                    <h3>Weather Information</h3>
+                    <div class="weather-input">
+                        <label for="cityInput">City:</label>
+                        <input id="cityInput" type="text" value="Rouen" placeholder="Enter city name">
+                        <button id="refreshWeather">Refresh Now</button>
+                    </div>
+                    <div id="weatherInfo" class="weather-display">Loading weather...</div>
+                </div>
+
+                <!-- Map Section -->
+                <div class="map-section">
+                    <h3>City Map</h3>
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Additional Data Sections -->
+            <div class="data-sections">
+                <!-- Crime Section -->
+                <div class="data-card">
+                    <h3><i class="fas fa-shield-alt"></i> Crime Alerts</h3>
+                    <ul id="crime" class="data-list">
+                        <li>Loading crime data...</li>
+                    </ul>
+                </div>
+
+                <!-- Transport Section -->
+                <div class="data-card">
+                    <h3><i class="fas fa-bus"></i> Transport</h3>
+                    <div class="transport-search">
+                        <label for="labelInput">Bus Label:</label>
+                        <input id="labelInput" type="text" placeholder="Enter bus label (e.g., Tamarelle)">
+                        <button id="searchTransport">Search</button>
+                    </div>
+                    <ul id="transport" class="transport-list">
+                        <!-- Vehicle items will be dynamically added here -->
+                    </ul>
+                </div>
+
+                <!-- Events Section -->
+                <div class="data-card">
+                    <h3><i class="fas fa-calendar-alt"></i> Events</h3>
+                    <ul id="events" class="data-list">
+                        <li>Loading events data...</li>
+                    </ul>
+                </div>
+
+                <!-- Temperature Chart -->
+                <div class="data-card chart-section">
+                    <h3>Monthly Temperature</h3>
+                    <div class="temperature-chart">
+                        <canvas id="temperatureChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="/static/script.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeGauge();
+            drawTemperatureChart();
+            updateWeatherData();
+            initializeMap();
+            loadCrimeData();
+            loadEventsData();
+            
+            // Set up event listeners for your original functionality
+            document.getElementById('refreshWeather').addEventListener('click', refreshWeatherData);
+            document.getElementById('searchTransport').addEventListener('click', searchTransportData);
+            
+            // Update data every 5 minutes
+            setInterval(updateWeatherData, 300000);
+        });
+
+        // Initialize Leaflet Map
+        function initializeMap() {
+            // Initialize map (you can customize the coordinates for your city)
+            const map = L.map('map').setView([49.4431, 1.0993], 13); // Rouen coordinates
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Add a marker for the city
+            L.marker([49.4431, 1.0993]).addTo(map)
+                .bindPopup('Rouen - Smart City Dashboard')
+                .openPopup();
+        }
+
+        // Weather API Functions - Go backend integration
+        function refreshWeatherData() {
+            const city = document.getElementById('cityInput').value;
+            const weatherInfo = document.getElementById('weatherInfo');
+            
+            weatherInfo.innerHTML = `Loading weather data for ${city}...`;
+            
+            // Call your Go backend endpoint
+            fetch(`/api/weather?city=${encodeURIComponent(city)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Weather data not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Update the weather cards with real data from Go backend
+                    if (data.main) {
+                        const temp = Math.round(data.main.temp);
+                        const windSpeed = Math.round(data.wind.speed * 3.6); // Convert m/s to km/h
+                        
+                        document.querySelector('.aqi-value').textContent = temp;
+                        document.querySelector('.wind-speed').textContent = `${windSpeed} km/h`;
+                    }
+                    
+                    weatherInfo.innerHTML = `
+                        <div class="weather-result">
+                            <h4>${data.name} Weather</h4>
+                            <p>Temperature: ${Math.round(data.main.temp)}°C</p>
+                            <p>Condition: ${data.weather[0].description}</p>
+                            <p>Humidity: ${data.main.humidity}%</p>
+                            <p>Wind: ${Math.round(data.wind.speed * 3.6)} km/h</p>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    weatherInfo.innerHTML = `<p style="color: #ef4444;">Error: ${error.message}</p>`;
+                });
+        }
+
+        // Crime Data Loading - Go backend integration
+        function loadCrimeData() {
+            const crimeList = document.getElementById('crime');
+            crimeList.innerHTML = '<li>Loading crime data...</li>';
+            
+            // Call your Go backend crime endpoint
+            fetch('/api/crime')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        crimeList.innerHTML = '<li><i class="fas fa-shield-alt"></i> No recent crime reports</li>';
+                        return;
+                    }
+                    
+                    const crimeHtml = data.map(crime => {
+                        const icon = getCrimeIcon(crime.category || crime.type);
+                        const location = crime.location || crime.address || 'Unknown location';
+                        const timeAgo = crime.time_ago || formatTimeAgo(crime.date);
+                        
+                        return `<li><i class="${icon}"></i> ${crime.category || crime.type} - ${location} (${timeAgo})</li>`;
+                    }).join('');
+                    
+                    crimeList.innerHTML = crimeHtml;
+                })
+                .catch(error => {
+                    crimeList.innerHTML = '<li><i class="fas fa-exclamation-triangle"></i> Unable to load crime data</li>';
+                });
+        }
+
+        // Events Data Loading - Go backend integration
+        function loadEventsData() {
+            const eventsList = document.getElementById('events');
+            eventsList.innerHTML = '<li>Loading events data...</li>';
+            
+            // Call your Go backend events endpoint
+            fetch('/api/events')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        eventsList.innerHTML = '<li><i class="fas fa-calendar"></i> No upcoming events</li>';
+                        return;
+                    }
+                    
+                    const eventsHtml = data.map(event => {
+                        const icon = getEventIcon(event.type || event.category);
+                        const date = event.date ? new Date(event.date).toLocaleDateString() : 'TBD';
+                        const venue = event.venue || event.location || 'Location TBD';
+                        
+                        return `<li><i class="${icon}"></i> ${event.name || event.title} - ${venue} (${date})</li>`;
+                    }).join('');
+                    
+                    eventsList.innerHTML = eventsHtml;
+                })
+                .catch(error => {
+                    eventsList.innerHTML = '<li><i class="fas fa-exclamation-triangle"></i> Unable to load events data</li>';
+                });
+        }
+
+        // Transport Search - Go backend integration
+        function searchTransportData() {
+            const busLabel = document.getElementById('labelInput').value;
+            const transportList = document.getElementById('transport');
+            
+            if (!busLabel.trim()) {
+                alert('Please enter a bus label');
+                return;
+            }
+            
+            transportList.innerHTML = '<li>Searching transport data...</li>';
+            
+            // Call your Go backend transport endpoint
+            fetch(`/api/transport/search?label=${encodeURIComponent(busLabel)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || !data.vehicles || data.vehicles.length === 0) {
+                        transportList.innerHTML = '<li>No vehicles found with that label</li>';
+                        return;
+                    }
+                    
+                    const vehicleHtml = data.vehicles.map(vehicle => {
+                        const statusClass = (vehicle.status === 'active' || vehicle.online) ? 'online' : 'offline';
+                        const statusText = (vehicle.status === 'active' || vehicle.online) ? 'Online' : 'Offline';
+                        
+                        return `
+                            <li class="transport-item">
+                                <div class="bus-info">
+                                    <strong>Bus ${vehicle.label || vehicle.id}</strong>
+                                    <span class="route">${vehicle.route || 'Route N/A'}</span>
+                                    <span class="status ${statusClass}">${statusText}</span>
+                                </div>
+                                <div class="bus-details">
+                                    <span>Next stop: ${vehicle.next_stop || 'Unknown'} ${vehicle.eta ? `(${vehicle.eta})` : ''}</span>
+                                    <span>Passengers: ${vehicle.passengers || 0}/${vehicle.capacity || 50}</span>
+                                    <span>Last update: ${vehicle.last_update ? new Date(vehicle.last_update).toLocaleTimeString() : 'N/A'}</span>
+                                </div>
+                            </li>
+                        `;
+                    }).join('');
+                    
+                    transportList.innerHTML = vehicleHtml;
+                })
+                .catch(error => {
+                    transportList.innerHTML = `
+                        <li class="transport-item">
+                            <div class="bus-info">
+                                <strong>Bus ${busLabel}</strong>
+                                <span class="route">API Error</span>
+                                <span class="status offline">Offline</span>
+                            </div>
+                            <div class="bus-details">
+                                <span>Unable to connect to transport service</span>
+                            </div>
+                        </li>
+                    `;
+                });
+        }
+
+        // Air Quality and Weather updates - Go backend integration
+        function updateWeatherData() {
+            const city = document.getElementById('cityInput').value || 'Rouen';
+            
+            // Get comprehensive weather data from Go backend
+            fetch(`/api/weather/comprehensive?city=${encodeURIComponent(city)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update AQI if available
+                    if (data.air_quality && data.air_quality.aqi) {
+                        const aqiElement = document.querySelector('.aqi-value');
+                        aqiElement.textContent = data.air_quality.aqi;
+                        
+                        // Update AQI color
+                        const aqi = data.air_quality.aqi;
+                        if (aqi <= 50) {
+                            aqiElement.style.color = '#10b981';
+                        } else if (aqi <= 100) {
+                            aqiElement.style.color = '#f59e0b';
+                        } else if (aqi <= 150) {
+                            aqiElement.style.color = '#ef4444';
+                        } else {
+                            aqiElement.style.color = '#7c2d12';
+                        }
+                    }
+                    
+                    // Update temperature status section if available
+                    if (data.weather && data.weather.wind_speed) {
+                        document.querySelector('.current-temp').textContent = `${Math.round(data.weather.temperature || 15)}°C`;
+                        document.querySelector('.feels-like').textContent = `Feels like: ${Math.round(data.weather.feels_like || 15)}°C`;
+                        document.querySelector('.temp-range').textContent = `Range: ${Math.round(data.weather.temp_min || 12)}°C to ${Math.round(data.weather.temp_max || 18)}°C`;
+                    }
+                    
+                    // Update UV Index
+                    if (data.uv_index) {
+                        const uvValue = Math.round(data.uv_index);
+                        document.querySelector('.gauge-value').textContent = uvValue;
+                        
+                        // Update gauge
+                        const gauge = document.querySelector('.gauge-fill');
+                        const percentage = (uvValue / 11) * 100;
+                        
+                        let color = '#10b981';
+                        if (uvValue > 6) color = '#f59e0b';
+                        if (uvValue > 8) color = '#ef4444';
+                        
+                        gauge.style.background = `conic-gradient(from 0deg, ${color} 0%, ${color} ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+                    }
+                })
+                .catch(error => {
+                    console.log('Comprehensive weather data not available, using fallbacks');
+                    // Fallback to basic weather data
+                    refreshWeatherData();
+                });
+        }
+
+        // Helper function for time formatting
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+            
+            if (diffHours < 24) {
+                return `${diffHours} hours ago`;
+            } else {
+                const diffDays = Math.ceil(diffHours / 24);
+                return `${diffDays} days ago`;
+            }
+        }
+
+        // UV Index Gauge
+        function initializeGauge() {
+            const gauge = document.querySelector('.gauge-fill');
+            const uvValue = 6;
+            const percentage = (uvValue / 11) * 100;
+            gauge.style.background = `conic-gradient(from 0deg, #4ade80 0%, #4ade80 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+        }
+
+        // Temperature Chart
+        function drawTemperatureChart() {
+            const canvas = document.getElementById('temperatureChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Sample data
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const temperatures = [10, 12, 14, 16, 18, 20, 22, 21, 19, 16, 13, 11];
+            
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 40;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Set up chart area
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+            const maxTemp = Math.max(...temperatures);
+            const minTemp = Math.min(...temperatures);
+            const tempRange = maxTemp - minTemp;
+            
+            // Draw grid lines
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            
+            // Horizontal grid lines
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (i * chartHeight) / 5;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+            
+            // Draw temperature line
+            ctx.strokeStyle = '#4ade80';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            temperatures.forEach((temp, index) => {
+                const x = padding + (index * chartWidth) / (temperatures.length - 1);
+                const y = padding + chartHeight - ((temp - minTemp) / tempRange) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                
+                // Draw data points
+                ctx.fillStyle = '#4ade80';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Draw temperature labels
+                ctx.fillStyle = '#374151';
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${temp}°`, x, y - 10);
+            });
+            
+            ctx.stroke();
+            
+            // Draw month labels
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '11px Inter';
+            ctx.textAlign = 'center';
+            
+            months.forEach((month, index) => {
+                const x = padding + (index * chartWidth) / (months.length - 1);
+                ctx.fillText(month, x, height - 10);
+            });
+        }
+
+        function getCrimeIcon(category) {
+            const icons = {
+                'anti-social-behaviour': 'fas fa-exclamation-triangle',
+                'burglary': 'fas fa-home',
+                'robbery': 'fas fa-mask',
+                'vehicle-crime': 'fas fa-car',
+                'violent-crime': 'fas fa-fist-raised',
+                'shoplifting': 'fas fa-shopping-cart',
+                'criminal-damage-arson': 'fas fa-fire',
+                'drugs': 'fas fa-pills',
+                'possession-of-weapons': 'fas fa-exclamation-circle',
+                'public-order': 'fas fa-users',
+                'theft-from-the-person': 'fas fa-wallet',
+                'other-theft': 'fas fa-hand-paper',
+                'theft': 'fas fa-hand-paper',
+                'assault': 'fas fa-fist-raised',
+                'vandalism': 'fas fa-hammer'
+            };
+            return icons[category] || 'fas fa-exclamation-triangle';
+        }
+
+        function getEventIcon(type) {
+            const icons = {
+                'music': 'fas fa-music',
+                'sports': 'fas fa-running',
+                'conference': 'fas fa-microphone',
+                'festival': 'fas fa-star',
+                'meeting': 'fas fa-users',
+                'exhibition': 'fas fa-palette',
+                'theater': 'fas fa-theater-masks',
+                'concert': 'fas fa-music',
+                'workshop': 'fas fa-tools',
+                'cultural': 'fas fa-palette'
+            };
+            return icons[type] || 'fas fa-calendar-alt';
+        }
+
+        // Navigation interaction
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Add hover effects and animations
+        document.querySelectorAll('.weather-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
